@@ -20,6 +20,15 @@ class Database {
       console.error("Stack trace:", error.stack);
     }
   }
+  async disconnect() {
+    try {
+      await mongoose.disconnect();
+      console.log(`${config.NODE_ENV} database disconnected`);
+    } catch (error: any) {
+      console.error("Error disconnecting from MongoDB:", error.message);
+      console.error("Stack trace:", error.stack);
+    }
+  }
 }
 
 const mongodb = new Database();

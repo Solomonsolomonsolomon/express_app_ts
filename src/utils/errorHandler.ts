@@ -29,7 +29,7 @@ export async function ErrorHandler(
   res: express.Response,
   next: express.NextFunction
 ) {
-  
+  // Log error details with winston
   logger.error(`Error occurred: ${err.message} at ${req.method} ${req.url}`, {
     statusCode: err.statusCode || 500,
     method: req.method,
@@ -38,6 +38,7 @@ export async function ErrorHandler(
     stack: err.stack,
   });
 
+  // Respond with the error details
   return res.status(err?.statusCode || 500).json({
     status: err?.statusCode || 500,
     msg: `${err?.message}` || "Internal server error",

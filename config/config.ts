@@ -1,8 +1,11 @@
 import dotenv from "dotenv";
-const environment = process.env.NODE_ENV || "development";
-const getMongoUri = () => process.env[`${environment.toUpperCase()}_MONGO_URI`];
-
 dotenv.config();
+const environment = process.env.NODE_ENV || "development";
+const getMongoUri = () =>
+  process.env[`${environment.toUpperCase().trim()}_MONGO_URI`];
+
+
+
 export const config = {
   port: process.env.PORT || 3000,
   NODE_ENV: environment,

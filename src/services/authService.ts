@@ -2,6 +2,8 @@ import bcrypt from "bcrypt";
 import { Helper } from "../utils/JWTHelper";
 import { UserRepository } from "../repositories/UserRepository";
 import mongoose from "mongoose";
+import { ApplicationError } from "../utils/errorHandler";
+import HttpStatusCodes from "../constants/HttpStatusCodes";
 
 export class AuthService {
   private static instance: AuthService;
@@ -22,6 +24,14 @@ export class AuthService {
 
   async registerUser(username: string, password: string) {
     const hashedPassword = await bcrypt.hash(password, 10);
+    const usernameExists = !!(await this.userRepository.findByUsername(
+      username
+    ));
+    if (usernameExists)
+      throw new ApplicationError(
+        "user already exists",
+        HttpStatusCodes.BAD_REQUEST
+      );
     const newUser = await this.userRepository.createUser({
       username,
       password: hashedPassword,
@@ -43,7 +53,7 @@ export class AuthService {
 
     await this.userRepository.addRefreshToken(user._id as any, refreshToken);
 
-    return { accessToken, refreshToken,user };
+    return { accessToken, refreshToken, user };
   }
 
   async refreshAccessToken(refreshToken: string) {

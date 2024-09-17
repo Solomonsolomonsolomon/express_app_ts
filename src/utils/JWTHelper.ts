@@ -30,7 +30,7 @@ export class Helper {
     try {
       return jwt.verify(token, accessTokenSecret);
     } catch (error) {
-      throw new ApplicationError("Invalid Token", HttpStatusCodes.FORBIDDEN);
+      throw new ApplicationError("Invalid Token", HttpStatusCodes.UNAUTHORIZED);
     }
   }
 
@@ -39,12 +39,12 @@ export class Helper {
     const decoded = jwt.verify(token, refreshTokenSecret) as JwtPayload;
 
     if (!decoded.userId) {
-      throw new ApplicationError('Invalid Token', HttpStatusCodes.FORBIDDEN);
+      throw new ApplicationError('Invalid Token', HttpStatusCodes.UNAUTHORIZED);
     }
 
     return decoded.userId;
   } catch (error) {
-    throw new ApplicationError('Invalid Token', HttpStatusCodes.FORBIDDEN);
+    throw new ApplicationError('Invalid Token', HttpStatusCodes.UNAUTHORIZED);
   }
 }
 }
